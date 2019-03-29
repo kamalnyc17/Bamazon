@@ -11,7 +11,8 @@ CREATE TABLE products(
     product_name VARCHAR(100),
     department_name VARCHAR(50),
     price INT NOT NULL default 0,
-    stock_quantity INT NOT NULL default 0
+    stock_quantity INT NOT NULL default 0,
+    PRIMARY KEY (item_id)
 );
 
 -- update table with data

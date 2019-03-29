@@ -67,9 +67,10 @@ function userInput() {
                 function (err, res) {
                     if (err) throw err;
 
-                    // comparing the product
                     var qty = res[0].stock_quantity;
                     var price = res[0].price;
+                    
+                    // comparing the product inventory
                     if (qty < answer.qty) {
                         console.log(`\x1b[1m\x1b[31m\nInsufficient quantity! Try smaller quantity!\x1b[0m`);
                     } else {
@@ -78,7 +79,7 @@ function userInput() {
 
                         connection.query(
                             "UPDATE products SET ? WHERE ?",
-                            [{
+                            [   {
                                     stock_quantity: newQty
                                 },
                                 {
