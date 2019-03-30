@@ -1,6 +1,3 @@
-// clear the console
-console.log('\033c');
-
 // importing npm packages
 var mysql = require("mysql");
 var inquirer = require("inquirer");
@@ -21,22 +18,30 @@ connection.connect(function (err) {
     //console.log( `Connection Established. ID# ${connection.threadId}`);
 })
 
-// display existing products
-console.log(`\x1b[7m  Our Existing Products  \x1b[0m`);
-connection.query("SELECT * from products", function (err, res) {
-    if (err) throw err;
+// program starts here
+displayList();
 
-    console.table(
-        res.map(rowData => {
-            return {
-                "Item ID": rowData.item_id,
-                "Product Name": rowData.product_name,
-                "Price": rowData.price
-            };
-        })
-    );
-    userInput()
-})
+// function to display existing products
+function displayList() {
+    // clear the console
+    console.log('\033c');
+    // displaying the product list
+    console.log(`\x1b[7m  Our Existing Products  \x1b[0m`);
+    connection.query("SELECT * from products", function (err, res) {
+        if (err) throw err;
+
+        console.table(
+            res.map(rowData => {
+                return {
+                    "Item ID": rowData.item_id,
+                    "Product Name": rowData.product_name,
+                    "Price": rowData.price
+                };
+            })
+        );
+        userInput();
+    })
+}
 
 // ask for user input and process data
 function userInput() {
@@ -44,7 +49,13 @@ function userInput() {
         .prompt([{
                 type: "input",
                 message: "Enter the Item ID you want to purchase:",
-                name: "itemID"
+                name: "itemID",
+                validate: function(value){
+                    if (value.trim().length < 4) {
+                        console.log(`\x1b[1m \x1b[31m\nERROR! Invalid Item ID\x1b[0m`);
+                        return false;
+                    } return true;
+                }                
             },
             {
                 type: "input",
@@ -69,32 +80,50 @@ function userInput() {
 
                     var qty = res[0].stock_quantity;
                     var price = res[0].price;
-                    
+                    var newQty = qty - answer.qty;
+
                     // comparing the product inventory
                     if (qty < answer.qty) {
                         console.log(`\x1b[1m\x1b[31m\nInsufficient quantity! Try smaller quantity!\x1b[0m`);
+                        endRepeat();
                     } else {
-                        console.log(`\x1b[1m\x1b[32m\nSUCCESS! Your Order is Confirmed!\x1b[0m`);
-                        var newQty = qty - answer.qty;
-
                         connection.query(
                             "UPDATE products SET ? WHERE ?",
-                            [   {
+                            [{
                                     stock_quantity: newQty
                                 },
                                 {
                                     item_id: answer.itemID
                                 }
                             ],
-                            function(err){
-                                if (err) throw err;
-                                console.log(`\x1b[1m\Total Cost for this Purchase: ${price * answer.qty}\x1b[0m`)
+                            function (err) {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+                                    console.log(`\x1b[1m\x1b[32m\nSUCCESS! Your Order is Confirmed!\x1b[0m`);
+                                    console.log(`\x1b[1m\Total Cost for this Purchase: ${price * answer.qty}\x1b[0m`);
+                                    endRepeat();
+                                }
                             }
                         )
                     }
-
-                    // end of program
-                    connection.end();
                 })
+        })
+}
+
+// function to repeat or end program
+function endRepeat() {
+    inquirer
+        .prompt([{
+            type: "list",
+            name: "wish",
+            message: "\nDo you want to bid on another item?",
+            choices: ["Yes", "No"]
+        }]).then(function (answer) {
+            if (answer.wish === "Yes") {
+                displayList();
+            } else {
+                connection.end();
+            }
         })
 }
