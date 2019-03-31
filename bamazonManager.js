@@ -83,7 +83,31 @@ function showProduct() {
     );
 }
 
+// function to show low inventory
+function showLowInventory(){
+    // clear the console
+    console.log('\033c');
+    // displaying the product list
+    console.log(`\x1b[7m  Products with Low Inventory  \x1b[0m`);
+    connection.query(
+        'SELECT * FROM products WHERE stock_quantity < 5',
+        function(err, res){
+            if (err) throw err;
 
+            console.table(
+                res.map(rowData => {
+                    return {         
+                        "Item ID": rowData.item_id,
+                        "Product Name": rowData.product_name,
+                        "Price": rowData.price,
+                        "Quantity": rowData.stock_quantity
+                    }
+                })
+            );
+            endRepeat();
+        }
+    )
+}
 
 
 
