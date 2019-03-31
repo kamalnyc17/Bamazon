@@ -222,7 +222,7 @@ function addProduct(){
                 name: 'price',
                 message: 'Enter the Price: ',
                 validate: function(value){                    
-                    if (!isNaN(value) && parseInt(value) > 0) {
+                    if (!isNaN(value) && parseFloat(value) > 0) {
                         return true
                     } else {
                         console.log(`\x1b[1m \x1b[31m\nPrice must be more that zero\x1b[0m`);
@@ -255,8 +255,16 @@ function addProduct(){
               },
               function (err) {
                 if (err) throw err;
-                console.log("Your auction was created successfully!");
-                
+                console.log(`\x1b[1m\x1b[32m\nSUCCESS! The Following Item has been Created!\x1b[0m`);                
+                console.table(
+                    {         
+                        "Item ID": answer.itemID,
+                        "Product Name": answer.product_name,
+                        "Department": answer.department_name,
+                        "Price": answer.price,
+                        "Quantity": answer.qty
+                    }
+                );
                 endRepeat();
               }
             );
