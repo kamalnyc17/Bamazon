@@ -182,6 +182,19 @@ function addProduct(){
     console.log('\033c');
     // displaying the product list
     console.log(`\x1b[7m  Creating New Products  \x1b[0m`);
+    // creating the dropdown list for departments
+    var dept = [];
+    connection.query(
+        'SELECT department_name FROM products GROUP BY department_name',
+        function(err, res){
+            if (err) throw err;
+
+            for( i=0; i < res.length; i++){
+                dept.push(res[i].department_name);
+            }
+        }
+    )
+    // user input starts here
     inquirer
         .prompt([
             {
@@ -207,9 +220,10 @@ function addProduct(){
                 }
             },
             {
-                type: 'input',
+                type: 'list',
                 name: 'department_name',
                 message: "Select the Name of the Department: ",
+                choices: dept,
                 validate: function(value){
                     if (value.trim().length < 4) {
                         console.log(`\x1b[1m \x1b[31m\nERROR! Invalid Department Name\x1b[0m`);
@@ -244,30 +258,44 @@ function addProduct(){
                 }
             }
         ]).then(function(answer){
-            // when finished prompting, insert the new item into the db with that info
-            connection.query(
-              "INSERT INTO products SET ?", {
-                item_id: answer.itemID,
-                product_name: answer.product_name,
-                department_name: answer.department_name,
-                price: answer.price,
-                stock_quantity: answer.qty
-              },
-              function (err) {
-                if (err) throw err;
-                console.log(`\x1b[1m\x1b[32m\nSUCCESS! The Following Item has been Created!\x1b[0m`);                
-                console.table(
-                    {         
-                        "Item ID": answer.itemID,
-                        "Product Name": answer.product_name,
-                        "Department": answer.department_name,
-                        "Price": answer.price,
-                        "Quantity": answer.qty
-                    }
-                );
-                endRepeat();
-              }
-            );
+            // at the end of data entry, ask for user confirmation before updating the database
+            inquirer
+            .prompt([{
+                type: "list",
+                name: "wish",
+                message: "\nAre You Sure you want to Add this new Item?",
+                choices: ["Yes", "No"]
+            }]).then(function (ans) {
+                if (ans.wish === "Yes"){
+                    connection.query(
+                        "INSERT INTO products SET ?", {
+                          item_id: answer.itemID,
+                          product_name: answer.product_name,
+                          department_name: answer.department_name,
+                          price: answer.price,
+                          stock_quantity: answer.qty
+                        },
+                        function (err) {
+                          if (err) throw err;
+                          console.log(`\x1b[1m\x1b[32m\nSUCCESS! The Following Item has been Created!\x1b[0m`);                
+                          console.table(
+                                {         
+                                  "Item ID": answer.itemID,
+                                  "Product Name": answer.product_name,
+                                  "Department": answer.department_name,
+                                  "Price": answer.price,
+                                  "Quantity": answer.qty
+                                }
+                            );
+                          endRepeat();
+                        }
+                    );
+                } else {
+                    console.log(`\x1b[1m \x1b[31m\nOkay. This Item was not added to the databse\x1b[0m`);
+                    endRepeat();
+                }
+
+            });            
         });
 }
 
