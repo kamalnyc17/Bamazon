@@ -113,6 +113,8 @@ function showLowInventory(){
 function addInventory(){
     // clear the console
     console.log('\033c');
+    // displaying the product list
+    console.log(`\x1b[7m  Adding Inventory  \x1b[0m`);
     inquirer
         .prompt([
             {
@@ -124,7 +126,6 @@ function addInventory(){
                         console.log(`\x1b[1m \x1b[31m\nERROR! Invalid Item ID\x1b[0m`);
                         return false;
                     } return true;
-
                 }
             },
             {
@@ -175,6 +176,92 @@ function addInventory(){
     
 }
 
+// function to add new product
+function addProduct(){
+    // clear the console
+    console.log('\033c');
+    // displaying the product list
+    console.log(`\x1b[7m  Creating New Products  \x1b[0m`);
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                name: 'itemID',
+                message: 'Enter the Item ID: ',
+                validate: function(value){
+                    if (value.trim().length < 4) {
+                        console.log(`\x1b[1m \x1b[31m\nERROR! Invalid Item ID\x1b[0m`);
+                        return false;
+                    } return true;
+                }
+            },
+            {
+                type: 'input',
+                name: 'product_name',
+                message: "Enter the Name of the Product: ",
+                validate: function(value){
+                    if (value.trim().length < 5) {
+                        console.log(`\x1b[1m \x1b[31m\nERROR! Invalid Product Name\x1b[0m`);
+                        return false;
+                    } return true;
+                }
+            },
+            {
+                type: 'input',
+                name: 'department_name',
+                message: "Select the Name of the Department: ",
+                validate: function(value){
+                    if (value.trim().length < 4) {
+                        console.log(`\x1b[1m \x1b[31m\nERROR! Invalid Department Name\x1b[0m`);
+                        return false;
+                    } return true;
+                }
+            },
+            {
+                type: 'input',
+                name: 'price',
+                message: 'Enter the Price: ',
+                validate: function(value){                    
+                    if (!isNaN(value) && parseInt(value) > 0) {
+                        return true
+                    } else {
+                        console.log(`\x1b[1m \x1b[31m\nPrice must be more that zero\x1b[0m`);
+                        return false
+                    }
+                }
+            },
+            {
+                type: 'input',
+                name: 'qty',
+                message: 'Enter Current Inventory: ',
+                validate: function(value){                    
+                    if (!isNaN(value) && parseInt(value) > 0) {
+                        return true
+                    } else {
+                        console.log(`\x1b[1m \x1b[31m\nUnits must be more that zero\x1b[0m`);
+                        return false
+                    }
+                }
+            }
+        ]).then(function(answer){
+            // when finished prompting, insert the new item into the db with that info
+            connection.query(
+              "INSERT INTO products SET ?", {
+                item_id: answer.itemID,
+                product_name: answer.product_name,
+                department_name: answer.department_name,
+                price: answer.price,
+                stock_quantity: answer.qty
+              },
+              function (err) {
+                if (err) throw err;
+                console.log("Your auction was created successfully!");
+                
+                endRepeat();
+              }
+            );
+        });
+}
 
 // function to repeat or end program
 function endRepeat() {
