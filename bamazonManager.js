@@ -109,7 +109,71 @@ function showLowInventory(){
     )
 }
 
+// function to add inventory
+function addInventory(){
+    // clear the console
+    console.log('\033c');
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                name: 'itemID',
+                message: 'Enter the Item ID you want to add Inventory:',
+                validate: function(value){
+                    if (value.trim().length < 4) {
+                        console.log(`\x1b[1m \x1b[31m\nERROR! Invalid Item ID\x1b[0m`);
+                        return false;
+                    } return true;
 
+                }
+            },
+            {
+                type: 'input',
+                name: 'qty',
+                message: 'How many units you would like to add?',
+                validate: function(value){                    
+                    if (!isNaN(value) && parseInt(value) > 0) {
+                        return true
+                    } else {
+                        console.log(`\x1b[1m \x1b[31m\nUnits must be more that zero\x1b[0m`);
+                        return false
+                    }
+                }
+            }
+        ]).then(function(answer){
+            connection.query(
+                'SELECT stock_quantity FROM products WHERE ?',
+                {
+                    item_id: answer.itemID
+                },
+                function(err, res){
+                    if (err) throw err;
+
+                    var newQty = parseInt(res[0].stock_quantity) + parseInt(answer.qty);
+                    // undating inventory
+                    connection.query(                        
+                        "UPDATE products SET ? WHERE ?",
+                        [{
+                                stock_quantity: newQty
+                            },
+                            {
+                                item_id: answer.itemID
+                            }
+                        ],
+                        function (err) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log(`\x1b[1m\x1b[32m\nSUCCESS! Stock has been updated. The new inventory is: ${newQty}!\x1b[0m`);
+                                endRepeat();
+                            }
+                        }
+                    )
+                }
+            );
+        });
+    
+}
 
 
 // function to repeat or end program
