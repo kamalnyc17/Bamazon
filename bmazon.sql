@@ -24,7 +24,7 @@ CREATE TABLE departments(
     PRIMARY KEY (department_id)
 );
 
--- update table with data
+-- update product table with data
 INSERT INTO products( item_id, product_name, department_name, price, stock_quantity) 
 VALUES ( "A001", "Basmati Rice", "Food", 5.25, 20 ), ("A002", "Glueten Free Pizza", "Food", 8.00, 25 ), ( "A003", "Organic Chicken", "Food", 6.75, 15);
 
@@ -33,3 +33,7 @@ VALUES ( "B001", "Coca Cola", "Beverage", 3.10, 40 ), ( "B002", "Coors Light", "
 
 INSERT INTO products( item_id, product_name, department_name, price, stock_quantity)
 VALUES ("C001", "Clorex", "Supply", 17.69, 35), ("C002", "Swifter Liquid", "Supply", 14.29, 30);
+
+-- update departments table with data
+INSERT INTO departments( department_id, department_name, over_head_costs)
+VALUES ( "D01", "Food", 50), ("D02", "Beverage", 40), ("D03", "Supply", 30);
