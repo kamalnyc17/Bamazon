@@ -57,7 +57,9 @@ function showSale(){
     // displaying the product list
     console.log(`\x1b[7m  Product Sales By Department  \x1b[0m`);
     // creating the query string
-    var query = 'SELECT D.department_id AS "DeptID", D.department_name AS "Department", D.over_head_costs AS "OverHeadCosts", SUM(P.product_sales) AS "ProductSales",  SUM(P.product_sales) - D.over_head_costs AS "TotalProfit" FROM departments D INNER JOIN products P ON     D.department_name = P.department_name GROUP BY D.department_id';
+    var query = 'SELECT D.department_id AS "DeptID", D.department_name AS "Department", D.over_head_costs AS "OverHeadCosts", SUM(P.product_sales) AS "ProductSales", '; 
+    query += 'SUM(P.product_sales) - D.over_head_costs AS "TotalProfit" FROM departments D INNER JOIN products P ON D.department_name = P.department_name ';
+    query += 'GROUP BY D.department_id';
 
     connection.query(
         query,
