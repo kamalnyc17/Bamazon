@@ -185,7 +185,7 @@ function addProduct(){
     // creating the dropdown list for departments
     var dept = [];
     connection.query(
-        'SELECT department_name FROM products GROUP BY department_name',
+        'SELECT department_name FROM departments',
         function(err, res){
             if (err) throw err;
 
