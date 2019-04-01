@@ -72,15 +72,16 @@ function userInput() {
             }
         ]).then(function (answer) {
             connection.query(
-                "SELECT stock_quantity, price FROM products WHERE ?", {
+                "SELECT stock_quantity, price, product_sales FROM products WHERE ?", {
                     item_id: answer.itemID
                 },
                 function (err, res) {
                     if (err) throw err;
 
-                    var qty = res[0].stock_quantity;
-                    var price = res[0].price;
-                    var newQty = qty - answer.qty;
+                    var qty     = res[0].stock_quantity;
+                    var price   = res[0].price;
+                    var newQty  = qty - parseInt(answer.qty);
+                    var totSale = res[0].product_sales + (price * parseInt(answer.qty))
 
                     // comparing the product inventory
                     if (qty < answer.qty) {
@@ -90,7 +91,8 @@ function userInput() {
                         connection.query(
                             "UPDATE products SET ? WHERE ?",
                             [{
-                                    stock_quantity: newQty
+                                    stock_quantity: newQty,
+                                    product_sales: totSale
                                 },
                                 {
                                     item_id: answer.itemID

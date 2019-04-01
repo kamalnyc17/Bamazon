@@ -5,7 +5,7 @@ CREATE DATABASE bamazon;
 -- use this database
 USE bamazon;
 
--- create table with columns
+-- create product table
 CREATE TABLE products(
     item_id VARCHAR(30) UNIQUE,
     product_name VARCHAR(100),
@@ -14,6 +14,14 @@ CREATE TABLE products(
     stock_quantity INT NOT NULL default 0,
     product_sales DECIMAL(10,4) NOT NULL default 0,
     PRIMARY KEY (item_id)
+);
+
+-- create department table
+CREATE TABLE departments(
+    department_id VARCHAR(10) UNIQUE,
+    department_name VARCHAR(50) UNIQUE,
+    over_head_costs INT NOT NULL default 0,
+    PRIMARY KEY (department_id)
 );
 
 -- update table with data
