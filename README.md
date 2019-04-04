@@ -33,4 +33,12 @@ Add New Product
 
 ## MODULE: Supervisor
 ### COMMAND: node bamazonSupervisor.js
+This module allows a supervisor to add new department as well as run a departmental summary sales report to check profitability.
+Following screenshots would explain these features.
 
+Main Menu
+![Main Menu](https://github.com/kamalnyc17/Bamazon/blob/master/Images/Supervisor_MainMenu.jpg)
+View Product Sale By Department
+![Sale By Dept](https://github.com/kamalnyc17/Bamazon/blob/master/Images/Supervisor_SaleByDept.jpg)
+Add New Department
+![Add Dept](https://github.com/kamalnyc17/Bamazon/blob/master/Images/Supervisor_CreateDept.jpg)
