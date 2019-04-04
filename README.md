@@ -18,7 +18,7 @@ the system will reject the order and ask the customer to try again with a lower 
 ## MODULE: Manager
 ### COMMAND: node bamazonManager.js
 This module will present the manager with following options: View Products for Sale, View Low Inventory, Add to Inventory, Add New Product.
-Following screenshots would explain these options:
+Following screenshots would explain these options
 Main Menu
 ![Main Menu](https://github.com/kamalnyc17/Bamazon/blob/master/Images/Manager_MainMenu.jpg)
 View Products for Sale
