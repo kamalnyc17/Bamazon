@@ -8,4 +8,18 @@ reads data from the MySQL database and inserts/updates data as per the logic of 
 
 Given below are the details of the three Modules:
 
+## MODULE: Customer
+### COMMAND: node bamazonCustomer.js
+This module will display the existing products and allow the customer to make a purchase. If customer orders more than the units on hand, 
+the system will reject the order and ask the customer to try again with a lower quantity.
+![Customer View](https://github.com/kamalnyc17/Bamazon/blob/master/Images/Customer_ProductView.jpg)
+![Customer Error](https://github.com/kamalnyc17/Bamazon/blob/master/Images/Customer_OutofStockView.jpg)
+
+## MODULE: Manager
+### COMMAND: node bamazonManager.js
+
+
+
+## MODULE: Supervisor
+### COMMAND: node bamazonSupervisor.js
 
