@@ -5,7 +5,7 @@ var inquirer = require("inquirer");
 // define connection to sql database
 var connection = mysql.createConnection({
     host: "localhost",
-    port: 8889,
+    port: 3306,
     user: "root",
     password: "root",
     database: "bamazon"
@@ -14,10 +14,10 @@ var connection = mysql.createConnection({
 // setup connection and test it
 connection.connect(function (err) {
     if (err) throw err;
-
-    //console.log( `Connection Established. ID# ${connection.threadId}`);
 })
 
+
+console.log( `Connection Established. ID# ${connection.threadId}`);
 // program starts here
 displayList();
 
@@ -70,7 +70,7 @@ function userInput() {
                     }
                 }
             }
-        ]).then(function (answer) {
+        ]).then(answer => {
             connection.query(
                 "SELECT stock_quantity, price, product_sales FROM products WHERE ?", {
                     item_id: answer.itemID
@@ -121,7 +121,7 @@ function endRepeat() {
             name: "wish",
             message: "\nDo you want to bid on another item?",
             choices: ["Yes", "No"]
-        }]).then(function (answer) {
+        }]).then(answer => {
             if (answer.wish === "Yes") {
                 displayList();
             } else {

@@ -5,7 +5,7 @@ var inquirer = require('inquirer');
 // define connection to sql database
 var connection = mysql.createConnection({
     host: 'localhost',
-    port: 8889,
+    port: 3306,
     user: 'root',
     password: 'root',
     database: 'bamazon'
@@ -34,7 +34,7 @@ function showMenu() {
                 message: '\nWhat would you like to do? ',
                 choices: ['View Products for Sale', 'View Low Inventory', 'Add to Inventory', 'Add New Product', 'Exit']
             }
-        ]).then( function(answer){
+        ]).then( answer => {
             switch (answer.menuChoice){
                 case 'View Products for Sale':
                     showProduct();
@@ -141,7 +141,7 @@ function addInventory(){
                     }
                 }
             }
-        ]).then(function(answer){
+        ]).then( answer => {
             connection.query(
                 'SELECT stock_quantity FROM products WHERE ?',
                 {
@@ -257,7 +257,7 @@ function addProduct(){
                     }
                 }
             }
-        ]).then(function(answer){
+        ]).then(answer => {
             // at the end of data entry, ask for user confirmation before updating the database
             inquirer
             .prompt([{
@@ -265,7 +265,7 @@ function addProduct(){
                 name: "wish",
                 message: "\nAre You Sure you want to Add this new Item?",
                 choices: ["Yes", "No"]
-            }]).then(function (ans) {
+            }]).then(ans => {
                 if (ans.wish === "Yes"){
                     connection.query(
                         "INSERT INTO products SET ?", {
@@ -307,7 +307,7 @@ function endRepeat() {
             name: "wish",
             message: "\nDo you want to perform another operation?",
             choices: ["Yes", "No"]
-        }]).then(function (answer) {
+        }]).then( answer => {
             if (answer.wish === "Yes") {
                 showMenu();
             } else {

@@ -5,7 +5,7 @@ var inquirer = require("inquirer");
 // define connection to the database
 var connection = mysql.createConnection({
     host: "localhost",
-    port: "8889",
+    port: 3306,
     user: "root",
     password: "root",
     database: "bamazon"
@@ -33,7 +33,7 @@ function showMenu() {
                 choices: ["View Product Sales by Department", "Create New Department", "Exit"],
                 message: '\nWhat would you like to do? '
             }
-        ]).then(function(answer){
+        ]).then( answer => {
             switch (answer.wish){
                 case "View Product Sales by Department":
                     showSale();
@@ -127,7 +127,7 @@ function createDept(){
                     }
                 }
             }
-        ]).then(function(answer){
+        ]).then( answer => {
             // at the end of data entry, ask for user confirmation before updating the database
             inquirer
             .prompt([{
@@ -135,7 +135,7 @@ function createDept(){
                 name: "wish",
                 message: "\nAre You Sure you want to Add this new Department?",
                 choices: ["Yes", "No"]
-            }]).then(function (ans) {
+            }]).then( ans => {
                 if (ans.wish === "Yes"){
                     connection.query(
                         "INSERT INTO departments SET ?", 
@@ -174,7 +174,7 @@ function endRepeat() {
             name: "wish",
             message: "\nDo you want to perform another operation?",
             choices: ["Yes", "No"]
-        }]).then(function (answer) {
+        }]).then( answer => {
             if (answer.wish === "Yes") {
                 showMenu();
             } else {
